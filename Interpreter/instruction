@@ -1,0 +1,18 @@
+/***********************************
+* This is the instruction of how to use make file. It
+* can't use as readme file. 
+************************************/
+1. navigate to project root folder /CSE334Project. 
+2. check JAVA_HOME by typing echo $JAVA_HOME
+If JAVA_HOME is not set, set JAVA_HOME 
+$JAVA_HOME=C:/..../Java/bin
+Note: if the JAVA_HOME can't set to java/bin, 
+make sure to update make file line 14:  export PATH := $(JAVA_HOME):$(PATH)
+change it to export PATH := $(JAVA_HOME)/bin:$(PATH)
+3. $make
+it will generate all class files. and jar. 
+4. to run the program 
+java -jar jars/Interporater.jar testfilename
+
+
+ 

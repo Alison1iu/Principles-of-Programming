@@ -1,0 +1,95 @@
+Program design: All java files can be found in src/edu/osu/cse
+
+It includes five packages. 
+edu.osu.cse.interporater: holds java files for Interporater. 
+edu.osu.cse.interporater.Operator: holds java files for operator, which includes plus, minus, multiply, assign, in/out. 
+edu.osu.cse.parser: holds java files for Parser
+edu.osu.cse.token: holds java files for Tokenizer
+edu.osu.cse.utility.test: hold test utility, which can test all file in a folder. 
+
+
+The tokenizer:
+	GrammerToken.java: set the complete grammer for CORE has been given in the course notes.
+
+		GrammerToken(String value, int flag, int lineno, GrammerTokenType type) -- Create a new instance of GrammerToken
+
+		GrammerTokenType getTokenType() -- Get token type of this instance
+
+		getTokenID() -- Get id code of this instance
+
+	Tokenizer.java: get the tokens from the input stream and displays the token number given above to the output stream one number per line.
+	The legal tokens, white spaces and the token stream are initialized as array of strings
+	
+        	currentToken() -  Returns the current token
+
+        	nextToken() - Advances to the next token
+
+			isSpecialCharacter(int ch)	- Return whether the current token is a special character
+
+			checkWhitespace(int ch) - Return whether the current token is a white space
+	
+			GrammerToken getInteger(int ch) --	getReservedWord(int ch), getIdentifier(int ch), getInteger(int ch), getSpecialSymbol(int ch), by using the four functions above, it break the CORE language into the into the four categories
+
+			usage() - This will print the usage requirements and exit.
+
+			close() - close the input source
+
+The parser:
+
+ 	BaseNode.java - This is the base object. It defines the basic behave of all Node. It includes three abstract methods: isTokenTypeMatch(int tokenid), getNodeTypeLimit(), and parsingValue(Tokenizer tokenizer). 
+ 		isTokenTypeMatch(int tokenid) will be used to check a given token id is matching with the instance of current Node .
+ 		getNodeTypeLimit() is used to retrieve the type of GrammerToken which will be allowed for the Node.
+ 		parsingValue(Tokenizer tokenizer) is used to construct the instance of current Node.
+
+ 		hasChildNode() check if this instance has child node or not
+ 		addChildNode(BaseNode node) add child node, and at the same time set up the print format
+ 		getChildNode(int index) get child Node at index
+ 		checkSignature(Tokenizer tokenizer) Check if current token in Tokenizer can match with this Node.
+ 		checkTokenType(Tokenizer tokenizer, int targetID) Check if current token in Tokenizer can match with this targetID.
+ 		addIndent(int value) add indent value.
+ 		setIndent(int value) set indent value.
+ 		writeoutNode(OutputStream out) Print this instance to output. it can be file out or screen out
+ 		getParent() Get parent node of this instance
+		evaluation(Interporater ip) - interporate current node, either variable or value will be saved into stack of interporater. 
+
+
+	Prog.java, DeclSeq.java, StmtSeq.java, Decl.java, IdList.java, Stmt.java, Assign.java, IfNode.java, Loop.java, In.java, Out.java, Cond.java, Comp.java, Exp.java, Term.java, Fac.java, Comp_op.java, Id.java, Int_node.java, Rw_node.java, Ss_node.java -
+		each java files creates the node type of each of following nodes:prog, decl_seq, stmt_seq, decl, id_list, stmt, assign, if_node, loop, in, out, cond, comp, exp, term, fac, comp_op, id, int_node, rw_node, ss_node
+
+  	Parse.java - The main process, it parses a input file and output a parse tree.
+  	ParserException.java - It handles the error input
+
+The Interporater:
+	Interporater.java - This is the control object for interporation.  It track variable defining and verify variable usage. It also maintain a stack to pass variable and value among different node.  
+	  Field:
+	  HashMap<String, Variable> _globalVariable  -  Global Variable definition, this is the container for defined variable.
+	  Stack<ComparableNode> _param  -- param stack, all node will use this stack to store and receive data. 
+	  Method
+	  public Interporater()  - Create a new instance of Interporater 
+	  public boolean hasVariable(Variable v) - Check if this variable is already defined. 
+	  public boolean hasVariable(String v) - Check if a given variable's name is already defined. 
+	  public void pushValue(Value value) throws ParserException - Push a value into parameter stack
+	  public void pushVariable(Variable v) throws ParserException -  push a variable into parameter stack
+	  public ComparableNode popParamStack() - pop the top element from parameter stack 
+	  public ComparableNode peekParamStack()  - peek the top element from parameter stack 
+	  public Stack<ComparableNode> getParamStack()  - Get parameter stack
+	  public void registerVariable(Variable va)throws ParserException  - define a new variable,   This should only be called by Decl Node. If the given variable is already existing, exception will be thrown. 
+	  public Variable getVariable(ID id)  -    Retrieve a variable which corresponding to a ID token,  If not found, exception will be thrown.
+	  private static void usage() - This will print the usage requirements and exit.  
+	  public static void main(String [] argv) - main method
+	
+	ComparableNode.java - The base object for Variable and Value. 
+		Variable.java - Object which representing idNode, it is wrapper class for integer type of varaible in Java.
+		Value.java - Object which representing intNode, it is wrapper class for integer constance in Java. 
+	
+	Operator.java - This is an interface which only defined one method: evaluation(Stack<ComparableNode> va). all sub object will be required to consume elements in Stack, and generate an integer value. This is a mimic object for Java operator. 
+	
+	AssignOp.java - Implementation of Operator.    Consume top 2 element from stack. Assign the value of first element to second element. If second element is not Variable, exception will be thrown. 
+	CompOperator.java - Implementation of Operator. If the result of compare is true return 1 else return 0;
+	MinusOp.java - Implementation of Operator.   Consume top 2 element from stack and return the minus result. 
+	MultiplyOp.java - Implementation of Operator.  Consume top 2 element from stack and return the multiply result.  
+	PlusOp.java - Implementation of Operator.    Consume top 2 element from stack and return the plus result. 
+	ReaderOp.java - Implementation of Operator.   Read from system console and save the input value to variables 
+	WriterOp.java - Implementation of Operator.    Display a given variable name and value
+	
+

@@ -1,0 +1,26 @@
+GrammerToken.java: set the complete grammer for CORE has been given in the course notes.
+
+	GrammerToken(String value, int flag, int lineno, GrammerTokenType type) -- Create a new instance of GrammerToken
+
+	GrammerTokenType getTokenType() -- Get token type of this instance
+
+	getTokenID() -- Get id code of this instance
+
+Tokenizer.java: get the tokens from the input stream and displays the token number given above to the output stream one number per line.
+The legal tokens, white spaces and the token stream are initialized as array of strings
+	
+        	currentToken() -  Returns the current token
+
+        	nextToken() - Advances to the next token
+
+	isSpecialCharacter(int ch) - Return whether the current token is a special character
+
+	checkWhitespace(int ch) - Return whether the current token is a white space
+	
+	GrammerToken getInteger(int ch) --
+	getReservedWord(int ch), getIdentifier(int ch), getInteger(int ch), getSpecialSymbol(int ch) 
+	by using the four functions above, it break the CORE language into the into the four categories
+
+	usage() -- This will print the usage requirements and exit.
+
+	close() -- close the input source
